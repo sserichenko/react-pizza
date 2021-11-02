@@ -1,31 +1,37 @@
 import React from 'react';
+import PropTypes, { number } from 'prop-types';
 import classNames from "classnames";
-const PizzaBlock = ({pizza}) => {
-    const typeNames = ["тонкое", "традиционное"];
-    const [activeType, setActiveType] = React.useState(0);
-
+const PizzaBlock = ({ types, sizes, imageUrl, name, price}) => {
+    const availableTypes = ["тонкое", "традиционное"];
+    const availableSizes = [26, 30, 40];
+    const [activeType, setActiveType] = React.useState(types[0]);
+    const [activeSize, setActiveSize] = React.useState(sizes[0]);
 
     const onSelectType = (index) => {
         setActiveType(index)
+    }
+
+    const onSelectSize = (index) => {
+        setActiveSize(index)
     }
 
     return (
         <div className="pizza-block">
               <img
                 className="pizza-block__image"
-                src={pizza.imageUrl}
+                src={imageUrl}
                 alt="Pizza"
               />
-              <h4 className="pizza-block__title">{pizza.name}</h4>
+              <h4 className="pizza-block__title">{name}</h4>
               <div className="pizza-block__selector">
                 <ul>
                     {
-                        typeNames.map((type, index) => 
+                        availableTypes.map((type, index) => 
                             <li 
                             key={`${type}_${index}`}
                             className={classNames({
                                 'active' : activeType === index,
-                                'disabled': !pizza.types.includes(index)
+                                'disabled': !types.includes(index)
                             })}
                             onClick={() => onSelectType(index)}
                             >{type}</li>
@@ -33,13 +39,21 @@ const PizzaBlock = ({pizza}) => {
                     }
                 </ul>
                 <ul>
-                  <li className="active" >26 см.</li>
-                  <li className="disabled">30 см.</li>
-                  <li className="disabled">40 см.</li>
+                  {availableSizes.map((size, index) => 
+                      <li 
+                      className={classNames({
+                        'active' : activeSize === index,
+                        'disabled': !sizes.includes(size)
+                      })}
+                      key={`${size}_${index}`}
+                      onClick={() => onSelectSize(index)}
+                      >{size} см.
+                      </li>
+                    )}
                 </ul>
               </div>
               <div className="pizza-block__bottom">
-                <div className="pizza-block__price">от {pizza.price} ₽</div>
+                <div className="pizza-block__price">от {price} ₽</div>
                 <div className="button button--outline button--add">
                   <svg
                     width="12"
@@ -59,6 +73,22 @@ const PizzaBlock = ({pizza}) => {
               </div>
             </div>
     );
+};
+
+PizzaBlock.propTypes = {
+  name: PropTypes.string,
+  price: PropTypes.number,
+  types: PropTypes.arrayOf(number).isRequired,
+  sizes: PropTypes.arrayOf(number).isRequired,
+  imageUrl: PropTypes.string
+};
+
+PizzaBlock.defaultProps = {
+  types: [],
+  name: "No name from DB",
+  sizes: [],
+  imageUrl: "No imageUrl from DB",
+  price: 0
 };
 
 export default PizzaBlock;

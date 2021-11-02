@@ -5,7 +5,7 @@ const SortPopup = ({items}) => {
     const [visiblePopup, setVisiblePopup] = React.useState(false);
     const sortRef = React.useRef();
     const [isActiveItem, setIsActiveItem] = React.useState(0);
-    const activeLabel = items[isActiveItem];
+    const activeLabel = items[isActiveItem].name;
 
     function onSelectSort (index){
         setIsActiveItem(index);
@@ -54,9 +54,9 @@ const SortPopup = ({items}) => {
                         items.map((item, index) => 
                             
                             <li className={isActiveItem === index ? "active" : ''}
-                            key={`${item}_${index}`}
+                            key={`${item.type}_${index}`}
                             onClick={() => onSelectSort(index)}
-                            >{item}</li>
+                            >{item.name}</li>
                         )
                     }
                 </ul>
