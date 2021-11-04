@@ -1,31 +1,40 @@
 import React from 'react';
+import PropTypes, { checkPropTypes, number, string } from 'prop-types';
+import { func } from 'prop-types';
 
-const Categories = React.memo(function Categories({categories, onClickItem}) {
+const Categories = React.memo(function Categories({ categories, onClickCategory, activeCategory }) {
 
-    const [isActiveItem, setIsActiveItem] = React.useState(null);
+  return (
+    <div className="categories">
+      <ul>
+        <li
+          className={activeCategory === null ? 'active' : ''}
+          onClick={() => onClickCategory(null)}>
+          Все
+        </li>
+        {categories &&
+          categories.map((category, index) => (
+            <li
+              className={activeCategory === index ? 'active' : ''}
+              key={`${category}_${index}`}
+              onClick={() => onClickCategory(index, category)}>
+              {category}
+            </li>
+          ))}
+      </ul>
+    </div>
+  );
+});
 
-    function onSelectCategory (index){
-        setIsActiveItem(index);
-        onClickItem(index);
-    }
+Categories.propTypes = {
+  categories: PropTypes.arrayOf(string).isRequired,
+  // activeCategory: PropTypes.oneOf([checkPropTypes(null), checkPropTypes(number)]),
+  onClickItem: func,
+};
 
-    return (
-        <div className="categories">
-              <ul>
-                  <li className={isActiveItem === null ? "active" : ''} onClick={() => onSelectCategory(null)}>Все</li>
-                  {
-                    categories &&
-                    categories.map((category, index) => 
-                        <li 
-                        className={isActiveItem === index ? "active" : ''}
-                        key={`${category}_${index}`}
-                        onClick={() => onSelectCategory(index, category)}
-                        >{category}</li>
-                    )
-                  }
-              </ul>
-        </div>
-    )
-})
+Categories.defaultProps = {
+  categories: [],
+  activeCategory: null,
+};
 
 export default Categories;
