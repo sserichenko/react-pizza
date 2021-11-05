@@ -1,12 +1,13 @@
 import React from 'react';
 import PropTypes, { number } from 'prop-types';
 import classNames from 'classnames';
+import Button from '../Button';
 
-const PizzaBlock = ({ types, sizes, imageUrl, name, price, isLoaded }) => {
+const PizzaBlock = ({ types, sizes, imageUrl, name, price, id, onAddToCart, cartCount  }) => {
   const availableTypes = ['тонкое', 'традиционное'];
   const availableSizes = [26, 30, 40];
   const [activeType, setActiveType] = React.useState(types[0]);
-  const [activeSize, setActiveSize] = React.useState(sizes[0]);
+  const [activeSize, setActiveSize] = React.useState(0);
 
   const onSelectType = (index) => {
     setActiveType(index);
@@ -15,6 +16,18 @@ const PizzaBlock = ({ types, sizes, imageUrl, name, price, isLoaded }) => {
   const onSelectSize = (index) => {
     setActiveSize(index);
   };
+
+  const onHandleAddToCart = () => {
+    const obj = {
+      imageUrl,
+      name,
+      price,
+      id,
+      size: availableSizes[activeSize],
+      type: availableTypes[activeType]
+    }
+    onAddToCart(obj)
+  }
 
   return (
 
@@ -51,7 +64,7 @@ const PizzaBlock = ({ types, sizes, imageUrl, name, price, isLoaded }) => {
           </div>
           <div className="pizza-block__bottom">
             <div className="pizza-block__price">от {price} ₽</div>
-            <div className="button button--outline button--add">
+            <Button  onClick={onHandleAddToCart} className="button button--add button--outline" >
               <svg
                 width="12"
                 height="12"
@@ -64,8 +77,8 @@ const PizzaBlock = ({ types, sizes, imageUrl, name, price, isLoaded }) => {
                 />
               </svg>
               <span>Добавить</span>
-              <i>2</i>
-            </div>
+              <i>{cartCount}</i>
+            </Button>
           </div>
         </div>
   );
@@ -77,7 +90,9 @@ PizzaBlock.propTypes = {
   types: PropTypes.arrayOf(number).isRequired,
   sizes: PropTypes.arrayOf(number).isRequired,
   imageUrl: PropTypes.string,
-  isLoaded: PropTypes.bool
+  isLoaded: PropTypes.bool,
+  onAddToCart: PropTypes.func,
+  cartCount: PropTypes.number
 };
 
 PizzaBlock.defaultProps = {
@@ -86,7 +101,8 @@ PizzaBlock.defaultProps = {
   sizes: [],
   imageUrl: 'No imageUrl from DB',
   price: 0,
-  isLoaded: false
+  isLoaded: false,
+  cartCount: 0
 };
 
 export default PizzaBlock;

@@ -5,6 +5,7 @@ import PizzaBlock from '../components/PizzaBlock/PizzaBlock';
 import SortPopup from '../components/SortPopup';
 import { setCategory, setSortBy } from '../redux/actions/filters';
 import { fetchPizzas } from '../redux/actions/pizzas';
+import { addPizzaToCart } from '../redux/actions/cart';
 import PizzaLoadingBlock from '../components/PizzaBlock/PizzaLoadingBlock';
 
 const categoriesNames = ['Мясные', 'Вегетарианские', 'Гриль', 'Острые', 'Закрытые'];
@@ -17,6 +18,8 @@ const Home = () => {
   const dispatch = useDispatch();
   const items = useSelector(({ pizzas }) => pizzas.items);
   const isLoaded = useSelector(({ pizzas }) => pizzas.isLoaded);
+  const cartItems = useSelector(({cart}) => cart.items);
+  console.log('cartItems', cartItems);
   const { category, sortBy } = useSelector(({ filters }) => filters);
 
   const onSelectCategory = React.useCallback(
@@ -34,9 +37,16 @@ const Home = () => {
     [],
   );
 
+  const handleAddToCart = React.useCallback(
+    (pizza) => {
+      dispatch(addPizzaToCart(pizza));
+    },
+    [],
+  );
+
   React.useEffect(() => {
     dispatch(fetchPizzas(category, sortBy));
-  }, [category, sortBy]);
+  }, [category, sortBy, dispatch]);
 
   return (
     <div className="container">
@@ -48,11 +58,17 @@ const Home = () => {
       <div className="content__items">
         {isLoaded
           ? items.map((pizza, index) => (
-              <PizzaBlock {...pizza} key={pizza.id + index} isLoaded={isLoaded} />
+              <PizzaBlock 
+              cartCount={cartItems[pizza.id] ? cartItems[pizza.id].items.length : 0}
+              {...pizza} 
+              key={`${pizza.id}_${index}`} 
+              isLoaded={isLoaded} 
+              onAddToCart={(properties) => handleAddToCart(properties)}
+              />
             ))
           : Array(12)
               .fill(Math.random() * 10)
-              .map((_, index) => <PizzaLoadingBlock key={index} />)}
+              .map((_, index) => <PizzaLoadingBlock key={`${index}__${Math.random()}`} />)}
       </div>
     </div>
   );

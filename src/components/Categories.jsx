@@ -1,5 +1,5 @@
 import React from 'react';
-import PropTypes, { checkPropTypes, number, string } from 'prop-types';
+import PropTypes, { string } from 'prop-types';
 import { func } from 'prop-types';
 
 const Categories = React.memo(function Categories({ categories, onClickCategory, activeCategory }) {
