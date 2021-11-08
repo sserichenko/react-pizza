@@ -1,6 +1,14 @@
 import React from 'react';
 
-const CartItem = ({name, img, size, type, currentCount, totalInnerPrice, handleClearCart}) => {
+const CartItem = ({id, name, img, size, type, currentCount, totalPrice, handleRemovePizza, plusItem, minusItem}) => {
+
+  const handlePlusItem = () => {
+    plusItem(id)
+  }
+
+  const handleMinusItem = () => {
+    minusItem(id)
+  }
 
     return (
         <div className="cart__item">
@@ -16,7 +24,9 @@ const CartItem = ({name, img, size, type, currentCount, totalInnerPrice, handleC
               <p>{type} тесто, {size} см.</p>
             </div>
             <div className="cart__item-count">
-              <div className="button button--outline button--circle cart__item-count-minus">
+              <div className="button button--outline button--circle cart__item-count-minus"
+              onClick={handleMinusItem}
+              >
                 <svg
                   width="10"
                   height="10"
@@ -34,7 +44,9 @@ const CartItem = ({name, img, size, type, currentCount, totalInnerPrice, handleC
                 </svg>
               </div>
               <b>{currentCount}</b>
-              <div className="button button--outline button--circle cart__item-count-plus">
+              <div className="button button--outline button--circle cart__item-count-plus"
+                onClick={handlePlusItem}
+              >
                 <svg
                   width="10"
                   height="10"
@@ -53,9 +65,10 @@ const CartItem = ({name, img, size, type, currentCount, totalInnerPrice, handleC
               </div>
             </div>
             <div className="cart__item-price">
-              <b>{totalInnerPrice} ₽</b>
+              <b>{totalPrice} ₽</b>
             </div>
-            <div className="cart__item-remove">
+            <div className="cart__item-remove"
+            onClick={() => handleRemovePizza(id)}>
               <div className="button button--outline button--circle">
                 <svg
                   width="10"
