@@ -1,11 +1,14 @@
 import React from 'react';
+import { useHistory } from "react-router-dom";
 import { useSelector, useDispatch } from 'react-redux';
 import CartItem from '../components/CartItem';
 import EmptyCart from '../components/EmptyCart';
+import Button from '../components/Button';
 import { clearCart, removeCartItem, plusItem, minusItem } from '../redux/actions/cart';
 
 const Cart = () => {
   const dispatch = useDispatch();
+  let history = useHistory();
   const { totalPrice, totalCount, items } = useSelector(({ cart }) => cart);
   const pizzas = Object.keys(items).map((key) => {
     return items[key].items[0];
@@ -28,6 +31,14 @@ const Cart = () => {
 
   const onMinusItem = (id) => {
     dispatch(minusItem(id))
+  }
+
+    function HomeButton() {
+      history.push("/");
+    }
+
+  const createOrder = () => {
+    console.log("ВАше замовлення", items)
   }
 
   return (
@@ -138,7 +149,7 @@ const Cart = () => {
               </span>
             </div>
             <div className="cart__bottom-buttons">
-              <a href="/" className="button button--outline button--add go-back-btn">
+              <Button className="button button--outline button--add go-back-btn" onClick={HomeButton}>
                 <svg
                   width="8"
                   height="14"
@@ -155,8 +166,8 @@ const Cart = () => {
                 </svg>
 
                 <span>Вернуться назад</span>
-              </a>
-              <div className="button pay-btn">
+              </Button>
+              <div className="button pay-btn" onClick={createOrder}>
                 <span>Оплатить сейчас</span>
               </div>
             </div>
